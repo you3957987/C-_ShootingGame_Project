@@ -43,34 +43,55 @@ Game::Game() {
     // 메인메뉴 이미지 로드
     mainmenuTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/coupangmaster.png");
     if (mainmenuTexture == nullptr) {
-        cerr << "Failed to load character texture" << endl;
+        cerr << "Failed to load main texture" << endl;
         cleanup();
         exit(1);
     }
 
     helpmenuTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/helpmenu.png");
     if (helpmenuTexture == nullptr) {
-        cerr << "Failed to load character texture" << endl;
+        cerr << "Failed to load help texture" << endl;
         cleanup();
         exit(1);
     }
 
     startbuttonTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/startbutton.png");
     if (startbuttonTexture == nullptr) {
-        cerr << "Failed to load character texture" << endl;
+        cerr << "Failed to load startbutton texture" << endl;
         cleanup();
         exit(1);
     }
 
     helpbuttonTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/helpbutton.png");
     if (helpbuttonTexture == nullptr) {
-        cerr << "Failed to load character texture" << endl;
+        cerr << "Failed to load helpbutton texture" << endl;
         cleanup();
         exit(1);
     }
-
-    // 캐릭터의 초기 위치와 크기 설정 이미지 없는 그냥 사각형.
-
+    clearfirstTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/clearfirst.png");
+    if (clearfirstTexture == nullptr) {
+        cerr << "Failed to load clearfirst texture" << endl;
+        cleanup();
+        exit(1);
+    }
+    clearlastTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/clearlast.png");
+    if (clearlastTexture == nullptr) {
+        cerr << "Failed to load clearlast texture" << endl;
+        cleanup();
+        exit(1);
+    }
+    gameoverTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/gameover.png");
+    if (gameoverTexture == nullptr) {
+        cerr << "Failed to load gameover texture" << endl;
+        cleanup();
+        exit(1);
+    }
+    nextbuttonTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/nextbutton.png");
+    if (gameoverTexture == nullptr) {
+        cerr << "Failed to load gameover texture" << endl;
+        cleanup();
+        exit(1);
+    }
     bullet = nullptr; // 게임 시작 시에는 탄막이 없음
 
     moveSpeed = 0.5;
@@ -79,6 +100,7 @@ Game::Game() {
     characterRect = { 400, 300, 96, 80 };
     startButton = {619, 600, 202, 64};
     helpButton = { 619, 800, 202, 64 };
+    nextButton = { 619, 700, 202, 64 };
 
     // 앞으로 추가할 클래스의 객체 생성 장소
     item = new Item(renderer, 1440, 900);
@@ -134,16 +156,42 @@ void Game::run() {
                 handleMainMenuInput(e);
                 helpmenurender();
                 break;
-
-            case GameState:: GameOver:
-
             case GameState:: ClearFirst:
+                handleMainMenuInput(e);
+                clearfirstrender();
+                break;
+            case GameState::ClearLast:
+                clearlastrender();
+                break;
+            case GameState::FoodStage: // 1스테이지
+                while (!quit) {
+                    Uint32 currentFrameTime = SDL_GetTicks();
+                    Uint32 deltaTime = currentFrameTime - prevFrameTime;
+                    prevFrameTime = currentFrameTime; // 모름 일단 60 프레임 고정용 코드
 
-            case GameState :: ClearLast:
+                    while (SDL_PollEvent(&e) != 0) {
+                        if (e.type == SDL_QUIT) {
+                            quit = true;
+                        }
+                    } // 종료 이벤트
+                    handleInput(deltaTime); // 방향키 조작 이벤트
 
+                    if (score->score > 400) {
+                        gameState = GameState::ClearFirst;
+                        break;
+                    }
+                    updateFoodStage(deltaTime); // 앞으로 추가할 업데이트
 
-            case GameState::FoodStage:
+                    foodstagerender(); // 렌더링
 
+                    Uint32 frameTime = SDL_GetTicks() - currentFrameTime;
+                    if (frameTime < 16) {
+                        SDL_Delay(16 - frameTime);
+                    } // 60 프레임 유지장치.  
+                }
+                break;
+
+            case GameState::ItemStage: // 2스테이지
                 while (!quit) {
                     Uint32 currentFrameTime = SDL_GetTicks();
                     Uint32 deltaTime = currentFrameTime - prevFrameTime;
@@ -166,16 +214,15 @@ void Game::run() {
                         SDL_Delay(16 - frameTime);
                     } // 60 프레임 유지장치.
 
-                    if (score->score > 5000) {
-                        gameState = GameState::ClearFirst;
+                    if (score->score > 2000) {
+                        gameState = GameState::ClearLast;
+                        break;
                     }
-
                 }
-
                 break;
 
             }
-               
+              
         }
     }
 }
@@ -244,27 +291,21 @@ void Game::updateFoodStage(Uint32 deltaTime) {
     if (item->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
         item->destroy();
-      
-        
     }
     if (nomalbox->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
         score->increaseScore(50); // 1씩 스코어 증가
-
-        nomalbox->destroy();
-       
+        nomalbox->destroy();  
     }
     if (failbox->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
         score->decreaseScore(50); // 1씩 스코어 증가
         failbox->destroy();
-    
     }
     if (smoke->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
         moveSpeed = 0.8; //담배피면 속도 증가.
         smoke->destroy();
-
     }
     if (bullet) {
         SDL_Rect bulletPosition = bullet->getBullet();
@@ -281,7 +322,51 @@ void Game::updateFoodStage(Uint32 deltaTime) {
     }
 }
 
+void Game::updateItemStage(Uint32 deltaTime) {
 
+    updateBullet();// 탄막 업데이트
+    // 여기에 게임 로직 업데이트 코드 추가
+    item->update(deltaTime); // Item 업데이트 호출
+    nomalbox->update(deltaTime);
+    failbox->update(deltaTime);
+    smoke->update(deltaTime);
+    scorebox->update(deltaTime);
+
+
+    // 캐릭터와 아이템의 충돌 감지
+    if (item->checkCollision(characterRect)) {
+        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
+        item->destroy();
+    }
+    if (nomalbox->checkCollision(characterRect)) {
+        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
+        score->increaseScore(50); // 1씩 스코어 증가
+        nomalbox->destroy();
+    }
+    if (failbox->checkCollision(characterRect)) {
+        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
+        score->decreaseScore(50); // 1씩 스코어 증가
+        failbox->destroy();
+    }
+    if (smoke->checkCollision(characterRect)) {
+        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
+        moveSpeed = 0.8; //담배피면 속도 증가.
+        smoke->destroy();
+    }
+    if (bullet) {
+        SDL_Rect bulletPosition = bullet->getBullet();
+
+        // 가져온 위치를 사용하여 ScoreBox와의 충돌 감지
+        if (scorebox->checkBulletCollision(bulletPosition)) {
+
+            score->increaseScore(200); // 1씩 스코어 증가
+
+            scorebox->destroy();
+            delete bullet;
+            bullet = nullptr;
+        }
+    }
+}
 
 void Game::foodstagerender() { // 앞으로 추가할 클래스의 렌더 추가 장소
 
@@ -293,7 +378,26 @@ void Game::foodstagerender() { // 앞으로 추가할 클래스의 렌더 추가 장소
 
     renderBullet();// 탄막 렌더러
     score->render(renderer); // 스코어 렌더링
+    item->render(renderer); // Item 렌더 호출
+    nomalbox->render(renderer);
+    failbox->render(renderer);
+    smoke->render(renderer);
+    scorebox->render(renderer);
 
+    SDL_RenderPresent(renderer);
+}
+
+
+void Game::itemstagerender() { // 앞으로 추가할 클래스의 렌더 추가 장소
+
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(renderer);
+
+    SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL); // 배경화면 텍스쳐 입히기
+    SDL_RenderCopy(renderer, characterTexture, NULL, &characterRect); // 캐릭터에 이미지 붙이기
+
+    renderBullet();// 탄막 렌더러
+    score->render(renderer); // 스코어 렌더링
     item->render(renderer); // Item 렌더 호출
     nomalbox->render(renderer);
     failbox->render(renderer);
@@ -321,8 +425,38 @@ void Game::helpmenurender() {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
 
-    SDL_RenderCopy(renderer, helpmenuTexture, NULL, NULL); // 배경화면 텍스쳐 입히기
+    SDL_RenderCopy(renderer, helpmenuTexture, NULL, NULL); 
     SDL_RenderCopy(renderer, helpbuttonTexture, NULL, &helpButton);
+
+    SDL_RenderPresent(renderer);
+
+}
+void Game::clearfirstrender() {
+
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(renderer);
+
+    SDL_RenderCopy(renderer, clearfirstTexture, NULL, NULL); 
+    SDL_RenderCopy(renderer, nextbuttonTexture, NULL, &nextButton);
+    SDL_RenderPresent(renderer);
+
+}
+void Game::clearlastrender() {
+
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(renderer);
+
+    SDL_RenderCopy(renderer, clearlastTexture, NULL, NULL); 
+
+    SDL_RenderPresent(renderer);
+
+}
+void Game::gameoverrender() {
+
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(renderer);
+
+    SDL_RenderCopy(renderer, gameoverTexture, NULL, NULL); 
 
     SDL_RenderPresent(renderer);
 
@@ -367,7 +501,12 @@ void Game::handleMainMenuInput(SDL_Event& e) {
             mouseY >= 800 && mouseY <= 800 + 64 ) {
 
             if(gameState == GameState :: MainMenu) gameState = GameState::Help;
-            else gameState = GameState::MainMenu;
+            else if(gameState == GameState :: Help) gameState = GameState::MainMenu;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 &&
+            mouseY >= 700 && mouseY <= 700 + 64 &&
+            gameState == GameState::ClearFirst) {
+            gameState = GameState::ItemStage;
         }
     }
 }

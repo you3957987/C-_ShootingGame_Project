@@ -46,12 +46,17 @@ protected:
     bool spacePressed;
 
     void foodstagerender();
+    void itemstagerender();
     void updateFoodStage(Uint32 deltaTime);
+    void updateItemStage(Uint32 deltaTime);
     void handleInput(Uint32 deltaTime);
     void handleMainMenuInput(SDL_Event& e);
     
     void helpmenurender();
     void mainmenurender();
+    void clearfirstrender();
+    void clearlastrender();
+    void gameoverrender();
 
     SDL_Texture* backgroundTexture;
     SDL_Texture* characterTexture;
@@ -59,10 +64,15 @@ protected:
     SDL_Texture* startbuttonTexture;
     SDL_Texture* helpbuttonTexture;
     SDL_Texture* helpmenuTexture;
+    SDL_Texture* clearfirstTexture;
+    SDL_Texture* clearlastTexture;
+    SDL_Texture* gameoverTexture;
+    SDL_Texture* nextbuttonTexture;
 
     SDL_Rect characterRect;
     SDL_Rect startButton;
     SDL_Rect helpButton;
+    SDL_Rect nextButton;
 
     SDL_Window* window;
     SDL_Renderer* renderer;
