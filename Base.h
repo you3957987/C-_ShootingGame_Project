@@ -12,16 +12,18 @@ public:
 
     void update(Uint32 deltaTime);
     void render(SDL_Renderer* renderer);
-
-protected:
+    void respawn();
 
     double moveSpeed;
+    int onoff;
 
     SDL_Texture* texture; // 텍스쳐
     SDL_Rect position; // 위치값
 
     int screenWidth;
     int screenHeight;
+
+    Uint32 respawnTime; // 리스폰 시간
     Uint32 lastSpawnTime;
 
     std::random_device rd;

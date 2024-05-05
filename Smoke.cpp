@@ -1,4 +1,4 @@
-//item.cpp
+//Smoke.cpp
 #include "Smoke.h"
 
 Smoke::Smoke(SDL_Renderer* renderer, int screenWidth, int screenHeight)

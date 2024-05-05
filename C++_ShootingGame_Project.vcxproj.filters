@@ -36,6 +36,15 @@
     <ClCompile Include="Smoke.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="ScoreBox.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Score.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GAME.h">
@@ -54,6 +63,15 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="Smoke.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreBox.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Score.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

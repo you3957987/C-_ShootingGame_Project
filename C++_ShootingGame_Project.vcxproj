@@ -133,19 +133,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="FailBox.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="MAIN.cpp" />
     <ClCompile Include="NomalBox.cpp" />
+    <ClCompile Include="Score.cpp" />
+    <ClCompile Include="ScoreBox.cpp" />
     <ClCompile Include="Smoke.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="FailBox.h" />
     <ClInclude Include="GAME.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="NomalBox.h" />
+    <ClInclude Include="Score.h" />
+    <ClInclude Include="ScoreBox.h" />
     <ClInclude Include="Smoke.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

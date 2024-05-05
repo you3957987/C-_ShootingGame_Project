@@ -10,6 +10,9 @@
 #include "NomalBox.h"
 #include "FailBox.h"
 #include "Smoke.h"
+#include "Bullet.h"
+#include "ScoreBox.h"
+#include "Score.h"
 
 class Game {
 public:
@@ -23,16 +26,24 @@ protected:
         MainMenu,
         FoodStage,
         ItemStage,
-        Help
+        Help,
+        GameOver,
+        ClearFirst,
+        ClearLast
     };
     GameState  gameState = GameState::MainMenu;;
 
-    Base* base;
+    Bullet* bullet;
+    void updateBullet(); // 탄막 업데이트 함수 추가
+    void renderBullet(); // 탄막 렌더 함수 추가
+    Score* score;
     Item* item;
     NomalBox* nomalbox;
     FailBox* failbox;
     Smoke* smoke;
-    double moveSpeed = 0.5;
+    ScoreBox* scorebox;
+    double moveSpeed;
+    bool spacePressed;
 
     void foodstagerender();
     void updateFoodStage(Uint32 deltaTime);

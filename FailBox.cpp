@@ -1,4 +1,4 @@
-//item.cpp
+//FallBox.cpp
 #include "FailBox.h"
 
 FailBox::FailBox(SDL_Renderer* renderer, int screenWidth, int screenHeight)

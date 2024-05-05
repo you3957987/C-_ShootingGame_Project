@@ -1,4 +1,4 @@
-//item.cpp
+//NomalBox.cpp
 #include "NomalBox.h"
 
 NomalBox::NomalBox(SDL_Renderer* renderer, int screenWidth, int screenHeight)
