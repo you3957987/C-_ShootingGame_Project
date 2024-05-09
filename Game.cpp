@@ -237,6 +237,19 @@ void Game::updateBullet() {
             bullet = nullptr;
         }
     }
+    if (bullet) {
+        SDL_Rect bulletPosition = bullet->getBullet();
+
+        // 가져온 위치를 사용하여 ScoreBox와의 충돌 감지
+        if (scorebox->checkBulletCollision(bulletPosition)) {
+
+            score->increaseScore(200); // 1씩 스코어 증가
+
+            scorebox->destroy();
+            delete bullet;
+            bullet = nullptr;
+        }
+    }
 }
 
 void Game::renderBullet() {
@@ -307,19 +320,7 @@ void Game::updateFoodStage(Uint32 deltaTime) {
         moveSpeed = 0.8; //담배피면 속도 증가.
         smoke->destroy();
     }
-    if (bullet) {
-        SDL_Rect bulletPosition = bullet->getBullet();
-
-        // 가져온 위치를 사용하여 ScoreBox와의 충돌 감지
-        if (scorebox->checkBulletCollision(bulletPosition)) {
-            
-            score->increaseScore(200); // 1씩 스코어 증가
-
-            scorebox->destroy();
-            delete bullet;
-            bullet = nullptr;
-        }
-    }
+    
 }
 
 void Game::updateItemStage(Uint32 deltaTime) {

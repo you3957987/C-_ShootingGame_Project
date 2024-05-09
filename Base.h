@@ -8,7 +8,7 @@
 class Base {
 public:
     Base(SDL_Renderer* renderer, int screenWidth, int screenHeight);
-    ~Base();
+    virtual ~Base();
 
     void update(Uint32 deltaTime);
     void render(SDL_Renderer* renderer);
