@@ -134,25 +134,33 @@
   <ItemGroup>
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Captain.cpp" />
     <ClCompile Include="FailBox.cpp" />
+    <ClCompile Include="FailWater.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="MAIN.cpp" />
     <ClCompile Include="NomalBox.cpp" />
+    <ClCompile Include="NomalWater.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="ScoreBox.cpp" />
     <ClCompile Include="Smoke.cpp" />
+    <ClCompile Include="Soju.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Captain.h" />
     <ClInclude Include="FailBox.h" />
+    <ClInclude Include="FailWater.h" />
     <ClInclude Include="GAME.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="NomalBox.h" />
+    <ClInclude Include="NomalWater.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="ScoreBox.h" />
     <ClInclude Include="Smoke.h" />
+    <ClInclude Include="Soju.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

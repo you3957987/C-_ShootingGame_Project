@@ -12,8 +12,8 @@ Smoke::Smoke(SDL_Renderer* renderer, int screenWidth, int screenHeight)
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 
-    position = { disX(gen), 0, 74, 140 }; // x 좌표는 화면 절반의 오른쪽에서 랜덤으로 설정,y좌표는 화면 상단, 가로세로 크기는 임의로 설정
+    position = { disX(gen), screenHeight + 100, 74, 140 }; // x 좌표는 화면 절반의 오른쪽에서 랜덤으로 설정,y좌표는 화면 상단, 가로세로 크기는 임의로 설정
 
-    moveSpeed = 12;
-
+    moveSpeed = 8;
+    respawnTime = 2000;
 }

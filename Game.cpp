@@ -92,15 +92,32 @@ Game::Game() {
         cleanup();
         exit(1);
     }
+    gameoverButtonTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/gameoverbutton.png");
+    if (gameoverTexture == nullptr) {
+        cerr << "Failed to load gameover texture" << endl;
+        cleanup();
+        exit(1);
+    }
+    heartTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/Heart.png");
+    if (heartTexture == nullptr) {
+        cerr << "Failed to load heart texture" << endl;
+        cleanup();
+        exit(1);
+    }
+
+    maxHealth = 3;
+    currentHealth = 2;
     bullet = nullptr; // 게임 시작 시에는 탄막이 없음
 
     moveSpeed = 0.5;
     spacePressed = true;
+    gameover = false;
 
     characterRect = { 400, 300, 96, 80 };
     startButton = {619, 600, 202, 64};
     helpButton = { 619, 800, 202, 64 };
     nextButton = { 619, 700, 202, 64 };
+    gameoverButton = { 619, 700, 202, 64 };
 
     // 앞으로 추가할 클래스의 객체 생성 장소
     item = new Item(renderer, 1440, 900);
@@ -111,10 +128,23 @@ Game::Game() {
 
     smoke = new Smoke(renderer, 1440, 900);
 
-    scorebox = new ScoreBox(renderer, 1440, 900);
+    nomalwater = new NomalWater(renderer, 1440, 900);
+
+    failwater = new FailWater(renderer, 1440, 900);
+
+    soju = new Soju(renderer, 1440, 900);
 
     score = new Score(renderer, 1000, 50); // 스코어 객체 생성 및 위치 설정
 
+    scorebox1 = new ScoreBox(renderer, 1440, 900);
+
+    scorebox2 = new ScoreBox(renderer, 1440, 900);
+
+    scorebox3 = new ScoreBox(renderer, 1440, 900);
+
+    captain1 = new Captain(renderer, 1440, 900);
+
+    captain2 = new Captain(renderer, 1440, 900);
 
 }
 
@@ -127,6 +157,14 @@ Game::~Game() {
     delete failbox;
     delete smoke;
     delete score;
+    delete scorebox1;
+    delete scorebox2;
+    delete scorebox3;
+    delete captain1;
+    delete captain2;
+    delete nomalwater;
+    delete failwater;
+    delete soju;
 }
 
 void Game::run() {
@@ -149,7 +187,6 @@ void Game::run() {
 
                 handleMainMenuInput(e);
                 mainmenurender();
-
                 break;
             case GameState::Help:
 
@@ -161,6 +198,8 @@ void Game::run() {
                 clearfirstrender();
                 break;
             case GameState::ClearLast:
+                score->score = 0;
+                handleMainMenuInput(e);
                 clearlastrender();
                 break;
             case GameState::FoodStage: // 1스테이지
@@ -174,16 +213,24 @@ void Game::run() {
                             quit = true;
                         }
                     } // 종료 이벤트
+                    score->increaseScore(0);
+
                     handleInput(deltaTime); // 방향키 조작 이벤트
 
-                    if (score->score > 400) {
-                        gameState = GameState::ClearFirst;
-                        break;
-                    }
                     updateFoodStage(deltaTime); // 앞으로 추가할 업데이트
 
                     foodstagerender(); // 렌더링
 
+                    if (score->score > 2000) {
+                        score->score = 0;
+                        gameState = GameState::ClearFirst;
+                        break;
+                    }
+                    if (gameover == true) {
+                        gameState = GameState::GameOver;
+                        break;
+                    }
+         
                     Uint32 frameTime = SDL_GetTicks() - currentFrameTime;
                     if (frameTime < 16) {
                         SDL_Delay(16 - frameTime);
@@ -202,25 +249,36 @@ void Game::run() {
                             quit = true;
                         }
                     } // 종료 이벤트
+                    score->increaseScore(0);
 
                     handleInput(deltaTime); // 방향키 조작 이벤트
 
-                    updateFoodStage(deltaTime); // 앞으로 추가할 업데이트
+                    updateItemStage(deltaTime); // 앞으로 추가할 업데이트
 
-                    foodstagerender(); // 렌더링
+                    itemstagerender(); // 렌더링
+
+                    if (score->score > 3000) {
+                        gameState = GameState::ClearLast;
+                        break;
+                    }
+                    if (gameover == true) {
+                        gameState = GameState::GameOver;
+                        break;
+                    }
 
                     Uint32 frameTime = SDL_GetTicks() - currentFrameTime;
                     if (frameTime < 16) {
                         SDL_Delay(16 - frameTime);
                     } // 60 프레임 유지장치.
 
-                    if (score->score > 2000) {
-                        gameState = GameState::ClearLast;
-                        break;
-                    }
                 }
                 break;
 
+            case GameState::GameOver:
+                score->score = 0;
+                handleMainMenuInput(e);
+                gameoverrender();
+                break;
             }
               
         }
@@ -241,11 +299,27 @@ void Game::updateBullet() {
         SDL_Rect bulletPosition = bullet->getBullet();
 
         // 가져온 위치를 사용하여 ScoreBox와의 충돌 감지
-        if (scorebox->checkBulletCollision(bulletPosition)) {
+        if (scorebox1->checkBulletCollision(bulletPosition)) {
 
             score->increaseScore(200); // 1씩 스코어 증가
 
-            scorebox->destroy();
+            scorebox1->destroy();
+            delete bullet;
+            bullet = nullptr;
+        }
+        if (scorebox2->checkBulletCollision(bulletPosition)) {
+
+            score->increaseScore(200); // 1씩 스코어 증가
+
+            scorebox2->destroy();
+            delete bullet;
+            bullet = nullptr;
+        }
+        if (scorebox3->checkBulletCollision(bulletPosition)) {
+
+            score->increaseScore(200); // 1씩 스코어 증가
+
+            scorebox3->destroy();
             delete bullet;
             bullet = nullptr;
         }
@@ -297,8 +371,12 @@ void Game::updateFoodStage(Uint32 deltaTime) {
     nomalbox->update(deltaTime);
     failbox->update(deltaTime);
     smoke->update(deltaTime);
-    scorebox->update(deltaTime);
-
+    scorebox1->update(deltaTime);
+    scorebox2->update(deltaTime);
+    scorebox3->update(deltaTime);
+    nomalwater->update(deltaTime);
+    failwater->update(deltaTime);
+    soju->update(deltaTime);
  
     // 캐릭터와 아이템의 충돌 감지
     if (item->checkCollision(characterRect)) {
@@ -320,6 +398,26 @@ void Game::updateFoodStage(Uint32 deltaTime) {
         moveSpeed = 0.8; //담배피면 속도 증가.
         smoke->destroy();
     }
+    if (soju->checkCollision(characterRect)) {
+        moveSpeed = 0.3;
+        soju->destroy();
+    }
+    if (nomalwater->checkCollision(characterRect)) {
+        // 피해 입음
+        currentHealth += 1;
+        if (currentHealth >= 3) {
+            currentHealth = 3; // 최대 체력은 3
+        }
+        nomalwater->destroy();
+    }
+    if (failwater->checkCollision(characterRect)) {
+        // 피해 입음
+        currentHealth -= 1;
+        if (currentHealth == 0) {
+            gameover = true;
+        }
+        failwater->destroy();
+    }
     
 }
 
@@ -331,8 +429,14 @@ void Game::updateItemStage(Uint32 deltaTime) {
     nomalbox->update(deltaTime);
     failbox->update(deltaTime);
     smoke->update(deltaTime);
-    scorebox->update(deltaTime);
-
+    scorebox1->update(deltaTime);
+    scorebox2->update(deltaTime);
+    scorebox3->update(deltaTime);
+    nomalwater->update(deltaTime);
+    failwater->update(deltaTime);
+    captain1->update(deltaTime);
+    captain2->update(deltaTime);
+    soju->update(deltaTime);
 
     // 캐릭터와 아이템의 충돌 감지
     if (item->checkCollision(characterRect)) {
@@ -354,19 +458,45 @@ void Game::updateItemStage(Uint32 deltaTime) {
         moveSpeed = 0.8; //담배피면 속도 증가.
         smoke->destroy();
     }
-    if (bullet) {
-        SDL_Rect bulletPosition = bullet->getBullet();
-
-        // 가져온 위치를 사용하여 ScoreBox와의 충돌 감지
-        if (scorebox->checkBulletCollision(bulletPosition)) {
-
-            score->increaseScore(200); // 1씩 스코어 증가
-
-            scorebox->destroy();
-            delete bullet;
-            bullet = nullptr;
-        }
+    if (soju->checkCollision(characterRect)) {
+        moveSpeed = 0.3;
+        soju->destroy();
     }
+    if (nomalwater->checkCollision(characterRect)) {
+        // 피해 입음
+        currentHealth += 1;
+        if (currentHealth >= 3) {
+            currentHealth = 3; // 최소 체력은 3
+        }
+        nomalwater->destroy();
+    }
+    if (captain1->checkCollision(characterRect)) {
+        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
+        gameover = true;
+        captain1->destroy();
+    }
+    if (captain2->checkCollision(characterRect)) {
+        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
+        gameover = true;
+        captain2->destroy();
+    }
+    if (nomalwater->checkCollision(characterRect)) {
+        // 피해 입음
+        currentHealth += 1;
+        if (currentHealth >= 3) {
+            currentHealth = 3; // 최대 체력은 3
+        }
+        nomalwater->destroy();
+    }
+    if (failwater->checkCollision(characterRect)) {
+        // 피해 입음
+        currentHealth -= 1;
+        if (currentHealth == 0) {
+            gameover = true;
+        }
+        failwater->destroy();
+    }
+    
 }
 
 void Game::foodstagerender() { // 앞으로 추가할 클래스의 렌더 추가 장소
@@ -383,7 +513,16 @@ void Game::foodstagerender() { // 앞으로 추가할 클래스의 렌더 추가 장소
     nomalbox->render(renderer);
     failbox->render(renderer);
     smoke->render(renderer);
-    scorebox->render(renderer);
+    scorebox1->render(renderer);
+    scorebox2->render(renderer);
+    scorebox3->render(renderer);
+    nomalwater->render(renderer);
+    failwater->render(renderer);
+    soju->render(renderer);
+    for (int i = 0; i < currentHealth; ++i) {
+        SDL_Rect heartRect = { 70 + i * 70, 50, 70, 61 }; // 하트의 위치와 크기 조절
+        SDL_RenderCopy(renderer, heartTexture, NULL, &heartRect);
+    }
 
     SDL_RenderPresent(renderer);
 }
@@ -403,7 +542,18 @@ void Game::itemstagerender() { // 앞으로 추가할 클래스의 렌더 추가 장소
     nomalbox->render(renderer);
     failbox->render(renderer);
     smoke->render(renderer);
-    scorebox->render(renderer);
+    scorebox1->render(renderer);
+    scorebox2->render(renderer);
+    scorebox3->render(renderer);
+    nomalwater->render(renderer);
+    failwater->render(renderer);
+    captain1->render(renderer);
+    captain2->render(renderer);
+    soju->render(renderer);
+    for (int i = 0; i < currentHealth; ++i) {
+        SDL_Rect heartRect = { 70 + i * 70, 50, 70, 61 }; // 하트의 위치와 크기 조절
+        SDL_RenderCopy(renderer, heartTexture, NULL, &heartRect);
+    }
 
     SDL_RenderPresent(renderer);
 }
@@ -447,8 +597,8 @@ void Game::clearlastrender() {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
 
-    SDL_RenderCopy(renderer, clearlastTexture, NULL, NULL); 
-
+    SDL_RenderCopy(renderer, clearlastTexture, NULL, NULL);
+    SDL_RenderCopy(renderer, gameoverButtonTexture, NULL, &gameoverButton);
     SDL_RenderPresent(renderer);
 
 }
@@ -457,7 +607,8 @@ void Game::gameoverrender() {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
 
-    SDL_RenderCopy(renderer, gameoverTexture, NULL, NULL); 
+    SDL_RenderCopy(renderer, gameoverTexture, NULL, NULL);
+    SDL_RenderCopy(renderer, gameoverButtonTexture, NULL, &gameoverButton);
 
     SDL_RenderPresent(renderer);
 
@@ -498,16 +649,26 @@ void Game::handleMainMenuInput(SDL_Event& e) {
             gameState == GameState::MainMenu) {
             gameState = GameState::FoodStage;
         }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 &&
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 도움말
             mouseY >= 800 && mouseY <= 800 + 64 ) {
-
             if(gameState == GameState :: MainMenu) gameState = GameState::Help;
             else if(gameState == GameState :: Help) gameState = GameState::MainMenu;
         }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 &&
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 다음 스테이지
             mouseY >= 700 && mouseY <= 700 + 64 &&
             gameState == GameState::ClearFirst) {
             gameState = GameState::ItemStage;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 게임 오버시;
+            mouseY >= 700 && mouseY <= 700 + 64 &&
+            gameState == GameState::GameOver) {
+            gameover = false;
+            gameState = GameState::MainMenu;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 게임 클리어시
+            mouseY >= 700 && mouseY <= 700 + 64 &&
+            gameState == GameState::ClearLast) {
+            gameState = GameState::MainMenu;
         }
     }
 }
