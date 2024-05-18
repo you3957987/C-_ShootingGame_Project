@@ -18,4 +18,10 @@ FailWater::FailWater(SDL_Renderer* renderer, int screenWidth, int screenHeight)
     respawnTime = 1500;
 }
 
+void FailWater::failwater_decrease_health(int& currentHealth,bool& gameover) {
+    currentHealth -= 1;
+    if (currentHealth == 0) {
+        gameover = true;
+    }
+}
 

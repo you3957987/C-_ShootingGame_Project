@@ -1,6 +1,5 @@
 //ScoreBox.h
 #pragma once
-
 #include "Base.h"
 
 class ScoreBox : public Base {

@@ -6,6 +6,5 @@ class Captain : public Item {
 public:
     Captain(SDL_Renderer* renderer, int screenWidth, int screenHeight);
 
-
-
+    void captain_gameover(bool& gameover);
 };

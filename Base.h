@@ -1,10 +1,10 @@
 //base.h
 #pragma once
-
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
 #include <random>
+
 class Base {
 public:
     Base(SDL_Renderer* renderer, int screenWidth, int screenHeight);

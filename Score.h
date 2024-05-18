@@ -13,7 +13,6 @@ public:
     void decreaseScore(int num);
     void render(SDL_Renderer* renderer);
 
-
     int score;
     SDL_Texture* scoreTextures[10]; // 0부터 9까지의 숫자 텍스처 배열
     SDL_Rect position;

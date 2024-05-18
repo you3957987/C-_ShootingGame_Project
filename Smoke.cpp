@@ -17,3 +17,7 @@ Smoke::Smoke(SDL_Renderer* renderer, int screenWidth, int screenHeight)
     moveSpeed = 8;
     respawnTime = 2000;
 }
+
+void Smoke::smoke_increase_speed(double& moveSpeed) {
+    moveSpeed = 0.8; //담배피면 속도 증가.
+}

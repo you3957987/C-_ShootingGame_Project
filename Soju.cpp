@@ -17,3 +17,7 @@ Soju::Soju(SDL_Renderer* renderer, int screenWidth, int screenHeight)
     moveSpeed = 30;
     respawnTime = 2000;
 }
+
+void Soju::soju_decrease_speed(double& moveSpeed) {
+    moveSpeed = 0.3; //담배피면 속도 증가.
+}

@@ -9,8 +9,6 @@ Score::Score(SDL_Renderer* renderer, int x, int y) : renderer(renderer), score(0
     position.w = digitWidth * 4; // 4자리 숫자를 표시하도록 변경
     position.h = 60; // 숫자 이미지의 높이
 
-    // 기존 코드 유지
-
     // 100 자리, 10 자리, 1 자리의 숫자 텍스처 배열 초기화
     for (int i = 0; i < 10; ++i) {
         std::string filename = "C:/Users/JunHyeok/Desktop/Shooting_game/score" + std::to_string(i) + ".png";

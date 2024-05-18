@@ -28,6 +28,3 @@ void ScoreBox::destroy() {
     // 아이템의 텍스처를 파괴하여 화면에 표시되지 않게 만듭니다.
     position.y = screenHeight + 100; // 화면 아래로 내려버리기.
 }
-
-
-

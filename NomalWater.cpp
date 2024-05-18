@@ -18,4 +18,9 @@ NomalWater::NomalWater(SDL_Renderer* renderer, int screenWidth, int screenHeight
     respawnTime = 3000;
 }
 
-
+void NomalWater::nomalwater_increase_health(int& currentHealth) {
+    currentHealth += 1;
+    if (currentHealth >= 3) {
+        currentHealth = 3; // 최대 체력은 3
+    }
+}

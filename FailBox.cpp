@@ -1,6 +1,6 @@
 //FallBox.cpp
 #include "FailBox.h"
-
+#include "Score.h"
 FailBox::FailBox(SDL_Renderer* renderer, int screenWidth, int screenHeight)
     : Item(renderer, screenWidth, screenHeight)
 {
@@ -16,6 +16,10 @@ FailBox::FailBox(SDL_Renderer* renderer, int screenWidth, int screenHeight)
 
     moveSpeed = 25;
     respawnTime = 2000;
+}
+
+void FailBox::failbox_decrease_score(Score* score) {
+    score->decreaseScore(50); // 1씩 스코어 증가
 }
 
 

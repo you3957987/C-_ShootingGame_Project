@@ -32,7 +32,7 @@ protected:
         GameOver,
         ClearFirst,
         ClearLast
-    };
+    }; // 게임 상태 표시용
     GameState  gameState = GameState::MainMenu;;
 
     Bullet* bullet;
@@ -46,7 +46,7 @@ protected:
     Smoke* smoke;
     NomalWater* nomalwater;
     FailWater* failwater;
-    Soju* soju;
+    Soju* soju; // 객체들!!!!!!!!
 
     ScoreBox* scorebox1;//스코어 박스 복사 == 점수 내는 박스
     ScoreBox* scorebox2;
@@ -55,13 +55,13 @@ protected:
     Captain* captain1;// 캡틴 복사 == 게임 오버 아이템
     Captain* captain2;
 
-    double moveSpeed;
-    bool spacePressed;
-    bool gameover;
+    double moveSpeed; // 캐릭터 이동속도
+    bool spacePressed; // 총알 스페이스 땠을때 나가게 만드는용 변수
+    bool gameover; // 게임오버 변수
 
     int maxHealth;
     int currentHealth;
-    SDL_Texture* heartTexture;
+    SDL_Texture* heartTexture; // 캐릭터 체력. max = 3
 
     void foodstagerender();
     void itemstagerender();
@@ -99,5 +99,3 @@ protected:
     void cleanup();
     SDL_Texture* loadTexture(const std::string& filePath);
 };
-
-

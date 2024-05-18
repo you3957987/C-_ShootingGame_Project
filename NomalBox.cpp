@@ -1,5 +1,6 @@
 //NomalBox.cpp
 #include "NomalBox.h"
+#include "Score.h"
 
 NomalBox::NomalBox(SDL_Renderer* renderer, int screenWidth, int screenHeight)
     : Item(renderer, screenWidth, screenHeight)
@@ -18,4 +19,6 @@ NomalBox::NomalBox(SDL_Renderer* renderer, int screenWidth, int screenHeight)
     respawnTime = 3000;
 }
 
-
+void NomalBox::nomalbox_increse_score(Score* score) {
+    score->increaseScore(50); // 1씩 스코어 증가
+}

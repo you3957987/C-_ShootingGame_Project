@@ -16,7 +16,8 @@ Captain::Captain(SDL_Renderer* renderer, int screenWidth, int screenHeight)
 
     moveSpeed = 30;
     respawnTime = 1500;
-
 }
 
-
+void Captain::captain_gameover(bool& gameover) {
+    gameover = true;
+}

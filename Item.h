@@ -1,6 +1,5 @@
 //item.h
 #pragma once
-
 #include "Base.h"
 
 class Item : public Base {
@@ -12,6 +11,4 @@ public:
 
     // 충돌 감지 함수
     bool checkCollision(const SDL_Rect& otherRect) const;
-
-
 };

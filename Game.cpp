@@ -113,7 +113,7 @@ Game::Game() {
     spacePressed = true;
     gameover = false;
 
-    characterRect = { 400, 300, 96, 80 };
+    characterRect = { 670, 750, 96, 80 };
     startButton = {619, 600, 202, 64};
     helpButton = { 619, 800, 202, 64 };
     nextButton = { 619, 700, 202, 64 };
@@ -339,15 +339,27 @@ void Game::handleInput(Uint32 deltaTime) {
 
     if (currentKeyStates[SDL_SCANCODE_LEFT]) {
         characterRect.x -= static_cast<int>(moveSpeed * deltaTime);
+        if (characterRect.x < 0) {
+            characterRect.x = 0;
+        }
     }
     if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
         characterRect.x += static_cast<int>(moveSpeed * deltaTime);
+        if (characterRect.x > 1440 - characterRect.w) {  // 1440은 윈도우의 너비
+            characterRect.x = 1440 - characterRect.w;
+        }
     }
     if (currentKeyStates[SDL_SCANCODE_UP]) {
         characterRect.y -= static_cast<int>(moveSpeed * deltaTime);
+        if (characterRect.y < 0) {
+            characterRect.y = 0;
+        }
     }
     if (currentKeyStates[SDL_SCANCODE_DOWN]) {
         characterRect.y += static_cast<int>(moveSpeed * deltaTime);
+        if (characterRect.y > 900 - characterRect.h) {  // 900은 윈도우의 높이
+            characterRect.y = 900 - characterRect.h;
+        }
     }
 
     if (currentKeyStates[SDL_SCANCODE_SPACE] && !spacePressed) { // 스페이스바가 눌렸고, 이전에 스페이스바가 눌리지 않은 상태일 때
@@ -385,37 +397,31 @@ void Game::updateFoodStage(Uint32 deltaTime) {
     }
     if (nomalbox->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
-        score->increaseScore(50); // 1씩 스코어 증가
+        nomalbox->nomalbox_increse_score(score);
         nomalbox->destroy();  
     }
     if (failbox->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
-        score->decreaseScore(50); // 1씩 스코어 증가
+        failbox->failbox_decrease_score(score);
         failbox->destroy();
     }
     if (smoke->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
-        moveSpeed = 0.8; //담배피면 속도 증가.
+        smoke->smoke_increase_speed(moveSpeed);
         smoke->destroy();
     }
     if (soju->checkCollision(characterRect)) {
-        moveSpeed = 0.3;
+        soju->soju_decrease_speed(moveSpeed);
         soju->destroy();
     }
     if (nomalwater->checkCollision(characterRect)) {
         // 피해 입음
-        currentHealth += 1;
-        if (currentHealth >= 3) {
-            currentHealth = 3; // 최대 체력은 3
-        }
+        nomalwater->nomalwater_increase_health(currentHealth);
         nomalwater->destroy();
     }
     if (failwater->checkCollision(characterRect)) {
         // 피해 입음
-        currentHealth -= 1;
-        if (currentHealth == 0) {
-            gameover = true;
-        }
+        failwater->failwater_decrease_health(currentHealth, gameover);
         failwater->destroy();
     }
     
@@ -445,58 +451,45 @@ void Game::updateItemStage(Uint32 deltaTime) {
     }
     if (nomalbox->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
-        score->increaseScore(50); // 1씩 스코어 증가
+        nomalbox->nomalbox_increse_score(score);
+
         nomalbox->destroy();
     }
     if (failbox->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
-        score->decreaseScore(50); // 1씩 스코어 증가
+        failbox->failbox_decrease_score(score);
+ 
         failbox->destroy();
     }
     if (smoke->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
-        moveSpeed = 0.8; //담배피면 속도 증가.
+        smoke->smoke_increase_speed(moveSpeed);
         smoke->destroy();
     }
     if (soju->checkCollision(characterRect)) {
-        moveSpeed = 0.3;
+        soju->soju_decrease_speed(moveSpeed);
         soju->destroy();
     }
     if (nomalwater->checkCollision(characterRect)) {
         // 피해 입음
-        currentHealth += 1;
-        if (currentHealth >= 3) {
-            currentHealth = 3; // 최소 체력은 3
-        }
-        nomalwater->destroy();
-    }
-    if (captain1->checkCollision(characterRect)) {
-        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
-        gameover = true;
-        captain1->destroy();
-    }
-    if (captain2->checkCollision(characterRect)) {
-        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
-        gameover = true;
-        captain2->destroy();
-    }
-    if (nomalwater->checkCollision(characterRect)) {
-        // 피해 입음
-        currentHealth += 1;
-        if (currentHealth >= 3) {
-            currentHealth = 3; // 최대 체력은 3
-        }
+        nomalwater->nomalwater_increase_health(currentHealth);
         nomalwater->destroy();
     }
     if (failwater->checkCollision(characterRect)) {
         // 피해 입음
-        currentHealth -= 1;
-        if (currentHealth == 0) {
-            gameover = true;
-        }
+        failwater->failwater_decrease_health(currentHealth, gameover);
         failwater->destroy();
     }
-    
+    if (captain1->checkCollision(characterRect)) {
+        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
+        captain1->captain_gameover(gameover);
+        captain1->destroy();
+    }
+    if (captain2->checkCollision(characterRect)) {
+        // 충돌 시 아이템 삭제하고 새로운 아이템 생성
+        captain2->captain_gameover(gameover);
+        captain2->destroy();
+    }
 }
 
 void Game::foodstagerender() { // 앞으로 추가할 클래스의 렌더 추가 장소

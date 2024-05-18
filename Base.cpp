@@ -11,7 +11,7 @@ Base::Base(SDL_Renderer* renderer, int screenWidth, int screenHeight)
         cerr << "Failed to load image: " << IMG_GetError() << endl;
     }
     texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
+    SDL_FreeSurface(surface); 
 
     // 베이스의 초기 위치와 크기 설정
     position = { disX(gen), 0, 37, 80 }; // x 좌표는 화면 절반의 오른쪽에서 랜덤으로 설정, 가로세로 크기는 임의로 설정
@@ -35,8 +35,6 @@ void Base::update(Uint32 deltaTime) {
     if (position.y > screenHeight) {
         respawn();
     }
-
-  
 }
 
 void Base ::respawn() {
@@ -52,5 +50,4 @@ void Base ::respawn() {
 void Base::render(SDL_Renderer* renderer) {
     // 적을 렌더링
     SDL_RenderCopy(renderer, texture, NULL, &position);
-
 }
