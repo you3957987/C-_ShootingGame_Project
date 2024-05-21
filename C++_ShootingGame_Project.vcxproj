@@ -146,6 +146,7 @@
     <ClCompile Include="ScoreBox.cpp" />
     <ClCompile Include="Smoke.cpp" />
     <ClCompile Include="Soju.cpp" />
+    <ClCompile Include="StoryRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />

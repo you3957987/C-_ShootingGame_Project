@@ -28,10 +28,17 @@ protected:
         MainMenu,
         FoodStage,
         ItemStage,
-        Help,
+        HelpOne,
+        HelpTwo,
         GameOver,
         ClearFirst,
-        ClearLast
+        ClearLast,
+        StoryStartOne,
+        StroyStartTwo,
+        StoryNextOne,
+        StoryNextTwo,
+        StoryEndOne,
+        StoryEndTwo
     }; // 게임 상태 표시용
     GameState  gameState = GameState::MainMenu;;
 
@@ -70,18 +77,32 @@ protected:
     void handleInput(Uint32 deltaTime);
     void handleMainMenuInput(SDL_Event& e);
     
-    void helpmenurender();
+    void helpmenu_one_render();
+    void helpmenu_two_render();
     void mainmenurender();
     void clearfirstrender();
     void clearlastrender();
     void gameoverrender();
 
+    void story_start_one_render();
+    void story_start_two_render();
+    void story_next_one_render();
+    void story_next_two_render();
+    void story_end_one_render();
+    void story_end_two_render();
+    SDL_Texture* story_start_one_Texture;
+    SDL_Texture* story_start_two_Texture;
+    SDL_Texture* story_next_one_Texture;
+    SDL_Texture* story_next_two_Texture;
+    SDL_Texture* story_end_one_Texture;
+    SDL_Texture* story_end_two_Texture;
+    SDL_Texture* helpmenu_one_Texture;
+    SDL_Texture* helpmenu_two_Texture;
     SDL_Texture* backgroundTexture;
     SDL_Texture* characterTexture;
     SDL_Texture* mainmenuTexture;
     SDL_Texture* startbuttonTexture;
     SDL_Texture* helpbuttonTexture;
-    SDL_Texture* helpmenuTexture;
     SDL_Texture* clearfirstTexture;
     SDL_Texture* clearlastTexture;
     SDL_Texture* gameoverTexture;

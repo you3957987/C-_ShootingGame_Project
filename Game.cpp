@@ -48,13 +48,18 @@ Game::Game() {
         exit(1);
     }
 
-    helpmenuTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/helpmenu.png");
-    if (helpmenuTexture == nullptr) {
+    helpmenu_one_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/helpmenu1.png");
+    if (helpmenu_one_Texture == nullptr) {
         cerr << "Failed to load help texture" << endl;
         cleanup();
         exit(1);
     }
-
+    helpmenu_two_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/helpmenu2.png");
+    if (helpmenu_two_Texture == nullptr) {
+        cerr << "Failed to load help texture" << endl;
+        cleanup();
+        exit(1);
+    }
     startbuttonTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/startbutton.png");
     if (startbuttonTexture == nullptr) {
         cerr << "Failed to load startbutton texture" << endl;
@@ -104,6 +109,42 @@ Game::Game() {
         cleanup();
         exit(1);
     }
+    story_start_one_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/Story1.png");
+    if (story_start_one_Texture == nullptr) {
+        cerr << "Failed to load heart texture" << endl;
+        cleanup();
+        exit(1);
+    }
+    story_start_two_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/Story2.png");
+    if (story_start_two_Texture == nullptr) {
+        cerr << "Failed to load heart texture" << endl;
+        cleanup();
+        exit(1);
+    }
+    story_next_one_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/Story3.png");
+    if (story_next_one_Texture == nullptr) {
+        cerr << "Failed to load heart texture" << endl;
+        cleanup();
+        exit(1);
+    }
+    story_next_two_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/Story4.png");
+    if (story_next_two_Texture == nullptr) {
+        cerr << "Failed to load heart texture" << endl;
+        cleanup();
+        exit(1);
+    }
+    story_end_one_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/Story5.png");
+    if (story_end_one_Texture == nullptr) {
+        cerr << "Failed to load heart texture" << endl;
+        cleanup();
+        exit(1);
+    }
+    story_end_two_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/Story6.png");
+    if (story_end_two_Texture == nullptr) {
+        cerr << "Failed to load heart texture" << endl;
+        cleanup();
+        exit(1);
+    }
 
     maxHealth = 3;
     currentHealth = 2;
@@ -116,11 +157,11 @@ Game::Game() {
     characterRect = { 670, 750, 96, 80 };
     startButton = {619, 600, 202, 64};
     helpButton = { 619, 800, 202, 64 };
-    nextButton = { 619, 700, 202, 64 };
-    gameoverButton = { 619, 700, 202, 64 };
+    nextButton = { 619, 800, 202, 64 };
+    gameoverButton = { 619, 800, 202, 64 };
 
     // 앞으로 추가할 클래스의 객체 생성 장소
-    item = new Item(renderer, 1440, 900);
+    //item = new Item(renderer, 1440, 900);
 
     nomalbox = new NomalBox(renderer, 1440, 900);
     
@@ -151,7 +192,7 @@ Game::Game() {
 Game::~Game() {
     cleanup();
 
-    delete item;
+    //delete item;
     delete bullet;
     delete nomalbox;
     delete failbox;
@@ -188,10 +229,13 @@ void Game::run() {
                 handleMainMenuInput(e);
                 mainmenurender();
                 break;
-            case GameState::Help:
-
+            case GameState::HelpOne:
                 handleMainMenuInput(e);
-                helpmenurender();
+                helpmenu_one_render();
+                break;
+            case GameState:: HelpTwo:
+                handleMainMenuInput(e);
+                helpmenu_two_render();
                 break;
             case GameState:: ClearFirst:
                 handleMainMenuInput(e);
@@ -221,7 +265,7 @@ void Game::run() {
 
                     foodstagerender(); // 렌더링
 
-                    if (score->score > 2000) {
+                    if (score->score > 50) {
                         score->score = 0;
                         gameState = GameState::ClearFirst;
                         break;
@@ -257,7 +301,7 @@ void Game::run() {
 
                     itemstagerender(); // 렌더링
 
-                    if (score->score > 3000) {
+                    if (score->score > 50) {
                         gameState = GameState::ClearLast;
                         break;
                     }
@@ -279,12 +323,35 @@ void Game::run() {
                 handleMainMenuInput(e);
                 gameoverrender();
                 break;
-            }
-              
+
+            case GameState::StoryStartOne:
+                handleMainMenuInput(e);
+                story_start_one_render();
+                break;
+            case GameState:: StroyStartTwo:
+                handleMainMenuInput(e);
+                story_start_two_render();
+                break;
+            case GameState:: StoryNextOne:
+                handleMainMenuInput(e);
+                story_next_one_render();
+                break;
+            case GameState:: StoryNextTwo:
+                handleMainMenuInput(e);
+                story_next_two_render();
+                break;
+            case GameState::StoryEndOne:
+                handleMainMenuInput(e);
+                story_end_one_render();
+                break;
+            case GameState:: StoryEndTwo:
+                handleMainMenuInput(e);
+                story_end_two_render();
+                break;
+            }   
         }
     }
 }
-
 void Game::updateBullet() {
     // 탄막 업데이트
     if (bullet) {
@@ -379,7 +446,7 @@ void Game::updateFoodStage(Uint32 deltaTime) {
 
     updateBullet();// 탄막 업데이트
     // 여기에 게임 로직 업데이트 코드 추가
-    item->update(deltaTime); // Item 업데이트 호출
+    //item->update(deltaTime); // Item 업데이트 호출
     nomalbox->update(deltaTime);
     failbox->update(deltaTime);
     smoke->update(deltaTime);
@@ -391,10 +458,10 @@ void Game::updateFoodStage(Uint32 deltaTime) {
     soju->update(deltaTime);
  
     // 캐릭터와 아이템의 충돌 감지
-    if (item->checkCollision(characterRect)) {
+    /*if (item->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
         item->destroy();
-    }
+    }*/
     if (nomalbox->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
         nomalbox->nomalbox_increse_score(score);
@@ -431,7 +498,7 @@ void Game::updateItemStage(Uint32 deltaTime) {
 
     updateBullet();// 탄막 업데이트
     // 여기에 게임 로직 업데이트 코드 추가
-    item->update(deltaTime); // Item 업데이트 호출
+    //item->update(deltaTime); // Item 업데이트 호출
     nomalbox->update(deltaTime);
     failbox->update(deltaTime);
     smoke->update(deltaTime);
@@ -445,10 +512,10 @@ void Game::updateItemStage(Uint32 deltaTime) {
     soju->update(deltaTime);
 
     // 캐릭터와 아이템의 충돌 감지
-    if (item->checkCollision(characterRect)) {
+    /*if (item->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
         item->destroy();
-    }
+    }*/
     if (nomalbox->checkCollision(characterRect)) {
         // 충돌 시 아이템 삭제하고 새로운 아이템 생성
         nomalbox->nomalbox_increse_score(score);
@@ -502,7 +569,7 @@ void Game::foodstagerender() { // 앞으로 추가할 클래스의 렌더 추가 장소
 
     renderBullet();// 탄막 렌더러
     score->render(renderer); // 스코어 렌더링
-    item->render(renderer); // Item 렌더 호출
+    //item->render(renderer); // Item 렌더 호출
     nomalbox->render(renderer);
     failbox->render(renderer);
     smoke->render(renderer);
@@ -531,7 +598,7 @@ void Game::itemstagerender() { // 앞으로 추가할 클래스의 렌더 추가 장소
 
     renderBullet();// 탄막 렌더러
     score->render(renderer); // 스코어 렌더링
-    item->render(renderer); // Item 렌더 호출
+    //item->render(renderer); // Item 렌더 호출
     nomalbox->render(renderer);
     failbox->render(renderer);
     smoke->render(renderer);
@@ -564,12 +631,23 @@ void Game::mainmenurender() {
 
 }
 
-void Game::helpmenurender() {
+void Game::helpmenu_one_render() {
 
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderClear(renderer);
 
-    SDL_RenderCopy(renderer, helpmenuTexture, NULL, NULL); 
+    SDL_RenderCopy(renderer, helpmenu_one_Texture, NULL, NULL);
+    SDL_RenderCopy(renderer, helpbuttonTexture, NULL, &helpButton);
+
+    SDL_RenderPresent(renderer);
+
+}        
+void Game::helpmenu_two_render() {
+
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(renderer);
+
+    SDL_RenderCopy(renderer, helpmenu_two_Texture, NULL, NULL);
     SDL_RenderCopy(renderer, helpbuttonTexture, NULL, &helpButton);
 
     SDL_RenderPresent(renderer);
@@ -636,31 +714,71 @@ void Game::handleMainMenuInput(SDL_Event& e) {
         int mouseX = e.button.x;
         int mouseY = e.button.y;
 
-        // 스타트 버튼 영역에 클릭이 발생하면 게임 상태를 FoodStage로 변경
+        // 스타트 버튼 영역에 클릭이 발생하면 게임 상태를 스토리 1로 변경
         if (mouseX >= 619 && mouseX <= 619 + 202 &&
             mouseY >= 600 && mouseY <= 600 + 64 &&
             gameState == GameState::MainMenu) {
+            gameState = GameState::StoryStartOne;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 스토리 1
+            mouseY >= 800 && mouseY <= 800 + 64 &&
+            gameState == GameState::StoryStartOne) {
+            gameState = GameState::StroyStartTwo;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 스토리 2
+            mouseY >= 800 && mouseY <= 800 + 64 &&
+            gameState == GameState::StroyStartTwo) {
             gameState = GameState::FoodStage;
         }
         else if (mouseX >= 619 && mouseX <= 619 + 202 && // 도움말
-            mouseY >= 800 && mouseY <= 800 + 64 ) {
-            if(gameState == GameState :: MainMenu) gameState = GameState::Help;
-            else if(gameState == GameState :: Help) gameState = GameState::MainMenu;
+            mouseY >= 800 && mouseY <= 800 + 64 &&
+            gameState == GameState :: MainMenu) {
+            gameState = GameState::HelpOne;
         }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 다음 스테이지
-            mouseY >= 700 && mouseY <= 700 + 64 &&
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 도움말
+            mouseY >= 800 && mouseY <= 800 + 64 &&
+            gameState == GameState::HelpOne) {
+            gameState = GameState::HelpTwo;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 도움말
+            mouseY >= 800 && mouseY <= 800 + 64 &&
+            gameState == GameState::HelpTwo) {
+            gameState = GameState::MainMenu;
+        }
+        if (mouseX >= 619 && mouseX <= 619 + 202 && // 푸드 스테이지 클리어후 버튼 클릭시 스토리 3
+            mouseY >= 800 && mouseY <= 800 + 64 &&
             gameState == GameState::ClearFirst) {
+            gameState = GameState::StoryNextOne;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 스토리 3
+            mouseY >= 800 && mouseY <= 800 + 64 &&
+            gameState == GameState::StoryNextOne) {
+            gameState = GameState::StoryNextTwo;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 스토리 4
+            mouseY >= 800 && mouseY <= 800 + 64 &&
+            gameState == GameState::StoryNextTwo) {
             gameState = GameState::ItemStage;
         }
         else if (mouseX >= 619 && mouseX <= 619 + 202 && // 게임 오버시;
-            mouseY >= 700 && mouseY <= 700 + 64 &&
+            mouseY >= 800 && mouseY <= 800 + 64 &&
             gameState == GameState::GameOver) {
             gameover = false;
             gameState = GameState::MainMenu;
         }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 게임 클리어시
-            mouseY >= 700 && mouseY <= 700 + 64 &&
+        if (mouseX >= 619 && mouseX <= 619 + 202 && // 게임 클리어시 다음 버튼 누르면 엔딩 1
+            mouseY >= 800 && mouseY <= 800 + 64 &&
             gameState == GameState::ClearLast) {
+            gameState = GameState::StoryEndOne;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 엔딩 1
+            mouseY >= 800 && mouseY <= 800 + 64 &&
+            gameState == GameState::StoryEndOne) {
+            gameState = GameState::StoryEndTwo;
+        }
+        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 엔딩 2 -> 메인
+            mouseY >= 800 && mouseY <= 800 + 64 &&
+            gameState == GameState::StoryEndTwo) {
             gameState = GameState::MainMenu;
         }
     }

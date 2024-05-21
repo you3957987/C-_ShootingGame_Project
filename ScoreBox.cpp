@@ -19,9 +19,9 @@ ScoreBox::ScoreBox(SDL_Renderer* renderer, int screenWidth, int screenHeight)
 
 }
 
-bool ScoreBox::checkBulletCollision(const SDL_Rect& otherRect) const {
+bool ScoreBox::checkBulletCollision(const SDL_Rect& bulletPosition) const {
     // 
-    return SDL_HasIntersection(&position, &otherRect);
+    return SDL_HasIntersection(&position, &bulletPosition);
 }
 
 void ScoreBox::destroy() {

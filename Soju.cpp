@@ -19,5 +19,5 @@ Soju::Soju(SDL_Renderer* renderer, int screenWidth, int screenHeight)
 }
 
 void Soju::soju_decrease_speed(double& moveSpeed) {
-    moveSpeed = 0.3; //담배피면 속도 증가.
+    moveSpeed -= 0.1; //담배피면 속도 증가.
 }

@@ -15,7 +15,7 @@ Captain::Captain(SDL_Renderer* renderer, int screenWidth, int screenHeight)
     position = { disX(gen), screenHeight + 100, 96, 80 }; // x 좌표는 화면 절반의 오른쪽에서 랜덤으로 설정,y좌표는 화면 상단, 가로세로 크기는 임의로 설정
 
     moveSpeed = 30;
-    respawnTime = 1500;
+    respawnTime = 3000;
 }
 
 void Captain::captain_gameover(bool& gameover) {

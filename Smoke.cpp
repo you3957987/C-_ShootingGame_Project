@@ -14,10 +14,10 @@ Smoke::Smoke(SDL_Renderer* renderer, int screenWidth, int screenHeight)
 
     position = { disX(gen), screenHeight + 100, 74, 140 }; // x 좌표는 화면 절반의 오른쪽에서 랜덤으로 설정,y좌표는 화면 상단, 가로세로 크기는 임의로 설정
 
-    moveSpeed = 8;
+    moveSpeed = 13;
     respawnTime = 2000;
 }
 
 void Smoke::smoke_increase_speed(double& moveSpeed) {
-    moveSpeed = 0.8; //담배피면 속도 증가.
+    moveSpeed += 0.1; //담배피면 속도 증가.
 }
