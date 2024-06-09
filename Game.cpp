@@ -54,12 +54,7 @@ Game::Game() {
         cleanup();
         exit(1);
     }
-    helpmenu_two_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/helpmenu2.png");
-    if (helpmenu_two_Texture == nullptr) {
-        cerr << "Failed to load help texture" << endl;
-        cleanup();
-        exit(1);
-    }
+
     startbuttonTexture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/startbutton.png");
     if (startbuttonTexture == nullptr) {
         cerr << "Failed to load startbutton texture" << endl;
@@ -115,6 +110,7 @@ Game::Game() {
         cleanup();
         exit(1);
     }
+    /*
     story_start_two_Texture = loadTexture("C:/Users/JunHyeok/Desktop/Shooting_game/Story2.png");
     if (story_start_two_Texture == nullptr) {
         cerr << "Failed to load heart texture" << endl;
@@ -145,7 +141,7 @@ Game::Game() {
         cleanup();
         exit(1);
     }
-
+    */
     maxHealth = 3;
     currentHealth = 2;
     bullet = nullptr; // 게임 시작 시에는 탄막이 없음
@@ -154,11 +150,11 @@ Game::Game() {
     spacePressed = true;
     gameover = false;
 
-    characterRect = { 670, 750, 96, 80 };
-    startButton = {619, 600, 202, 64};
-    helpButton = { 619, 800, 202, 64 };
-    nextButton = { 619, 800, 202, 64 };
-    gameoverButton = { 619, 800, 202, 64 };
+    characterRect = { 670, 750, 90, 153 };
+    startButton = {619, 600, 200, 141};
+    helpButton = { 619, 750, 200, 141 };
+    nextButton = { 619, 800, 200, 91 };
+    gameoverButton = { 619, 800, 200, 141 };
 
     // 앞으로 추가할 클래스의 객체 생성 장소
     //item = new Item(renderer, 1440, 900);
@@ -233,10 +229,6 @@ void Game::run() {
                 handleMainMenuInput(e);
                 helpmenu_one_render();
                 break;
-            case GameState:: HelpTwo:
-                handleMainMenuInput(e);
-                helpmenu_two_render();
-                break;
             case GameState:: ClearFirst:
                 handleMainMenuInput(e);
                 clearfirstrender();
@@ -265,7 +257,7 @@ void Game::run() {
 
                     foodstagerender(); // 렌더링
 
-                    if (score->score > 50) {
+                    if (score->score > 2000) {
                         score->score = 0;
                         gameState = GameState::ClearFirst;
                         break;
@@ -301,7 +293,7 @@ void Game::run() {
 
                     itemstagerender(); // 렌더링
 
-                    if (score->score > 50) {
+                    if (score->score > 3000) {
                         gameState = GameState::ClearLast;
                         break;
                     }
@@ -328,26 +320,10 @@ void Game::run() {
                 handleMainMenuInput(e);
                 story_start_one_render();
                 break;
-            case GameState:: StroyStartTwo:
-                handleMainMenuInput(e);
-                story_start_two_render();
-                break;
-            case GameState:: StoryNextOne:
-                handleMainMenuInput(e);
-                story_next_one_render();
-                break;
-            case GameState:: StoryNextTwo:
-                handleMainMenuInput(e);
-                story_next_two_render();
-                break;
-            case GameState::StoryEndOne:
-                handleMainMenuInput(e);
-                story_end_one_render();
-                break;
-            case GameState:: StoryEndTwo:
-                handleMainMenuInput(e);
-                story_end_two_render();
-                break;
+        
+          
+           
+       
             }   
         }
     }
@@ -642,17 +618,6 @@ void Game::helpmenu_one_render() {
     SDL_RenderPresent(renderer);
 
 }        
-void Game::helpmenu_two_render() {
-
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(renderer);
-
-    SDL_RenderCopy(renderer, helpmenu_two_Texture, NULL, NULL);
-    SDL_RenderCopy(renderer, helpbuttonTexture, NULL, &helpButton);
-
-    SDL_RenderPresent(renderer);
-
-}
 void Game::clearfirstrender() {
 
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -669,7 +634,7 @@ void Game::clearlastrender() {
     SDL_RenderClear(renderer);
 
     SDL_RenderCopy(renderer, clearlastTexture, NULL, NULL);
-    SDL_RenderCopy(renderer, gameoverButtonTexture, NULL, &gameoverButton);
+    SDL_RenderCopy(renderer, nextbuttonTexture, NULL, &nextButton);
     SDL_RenderPresent(renderer);
 
 }
@@ -715,70 +680,41 @@ void Game::handleMainMenuInput(SDL_Event& e) {
         int mouseY = e.button.y;
 
         // 스타트 버튼 영역에 클릭이 발생하면 게임 상태를 스토리 1로 변경
-        if (mouseX >= 619 && mouseX <= 619 + 202 &&
-            mouseY >= 600 && mouseY <= 600 + 64 &&
+        if (mouseX >= 619 && mouseX <= 619 + 150 &&
+            mouseY >= 650 && mouseY <= 650 + 70 &&
             gameState == GameState::MainMenu) {
             gameState = GameState::StoryStartOne;
         }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 스토리 1
-            mouseY >= 800 && mouseY <= 800 + 64 &&
-            gameState == GameState::StoryStartOne) {
-            gameState = GameState::StroyStartTwo;
-        }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 스토리 2
-            mouseY >= 800 && mouseY <= 800 + 64 &&
-            gameState == GameState::StroyStartTwo) {
-            gameState = GameState::FoodStage;
-        }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 도움말
-            mouseY >= 800 && mouseY <= 800 + 64 &&
-            gameState == GameState :: MainMenu) {
+
+        if (mouseX >= 619 && mouseX <= 619 + 200 && 
+            mouseY >= 780 && mouseY <= 780 + 141 &&
+            gameState == GameState::MainMenu) {
             gameState = GameState::HelpOne;
         }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 도움말
-            mouseY >= 800 && mouseY <= 800 + 64 &&
-            gameState == GameState::HelpOne) {
-            gameState = GameState::HelpTwo;
+        if (mouseX >= 619 && mouseX <= 619 + 200 && // 스토리 1
+            mouseY >= 800 && mouseY <= 800 + 91 &&
+            gameState == GameState::StoryStartOne) {
+            gameState = GameState::FoodStage;
         }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 도움말
-            mouseY >= 800 && mouseY <= 800 + 64 &&
-            gameState == GameState::HelpTwo) {
+        if (mouseX >= 619 && mouseX <= 619 + 200 && // 도움말
+            mouseY >= 800 && mouseY <= 800 + 141 &&
+            gameState == GameState::HelpOne) {
             gameState = GameState::MainMenu;
         }
-        if (mouseX >= 619 && mouseX <= 619 + 202 && // 푸드 스테이지 클리어후 버튼 클릭시 스토리 3
-            mouseY >= 800 && mouseY <= 800 + 64 &&
+        if (mouseX >= 619 && mouseX <= 619 + 200 && 
+            mouseY >= 800 && mouseY <= 800 + 91 &&
             gameState == GameState::ClearFirst) {
-            gameState = GameState::StoryNextOne;
-        }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 스토리 3
-            mouseY >= 800 && mouseY <= 800 + 64 &&
-            gameState == GameState::StoryNextOne) {
-            gameState = GameState::StoryNextTwo;
-        }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 스토리 4
-            mouseY >= 800 && mouseY <= 800 + 64 &&
-            gameState == GameState::StoryNextTwo) {
             gameState = GameState::ItemStage;
         }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 게임 오버시;
-            mouseY >= 800 && mouseY <= 800 + 64 &&
+        if (mouseX >= 619 && mouseX <= 619 + 200 && // 게임 오버시;
+            mouseY >= 800 && mouseY <= 800 + 141 &&
             gameState == GameState::GameOver) {
             gameover = false;
             gameState = GameState::MainMenu;
         }
-        if (mouseX >= 619 && mouseX <= 619 + 202 && // 게임 클리어시 다음 버튼 누르면 엔딩 1
-            mouseY >= 800 && mouseY <= 800 + 64 &&
+        if (mouseX >= 619 && mouseX <= 619 + 200 && // 게임 클리어시 다음 버튼 누르면 엔딩 1
+            mouseY >= 800 && mouseY <= 800 + 91 &&
             gameState == GameState::ClearLast) {
-            gameState = GameState::StoryEndOne;
-        }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 엔딩 1
-            mouseY >= 800 && mouseY <= 800 + 64 &&
-            gameState == GameState::StoryEndOne) {
-            gameState = GameState::StoryEndTwo;
-        }
-        else if (mouseX >= 619 && mouseX <= 619 + 202 && // 엔딩 2 -> 메인
-            mouseY >= 800 && mouseY <= 800 + 64 &&
-            gameState == GameState::StoryEndTwo) {
             gameState = GameState::MainMenu;
         }
     }

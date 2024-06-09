@@ -11,6 +11,7 @@ void Game::story_start_one_render() {
     SDL_RenderPresent(renderer);
 
 }
+/*
 void Game::story_start_two_render() {
 
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -66,3 +67,4 @@ void Game::story_end_two_render() {
     SDL_RenderPresent(renderer);
 
 }
+*/
